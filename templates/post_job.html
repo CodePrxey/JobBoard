@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Post a Job{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3>Post a New Job</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" onsubmit="return validateSalary()">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Job Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Job Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="requirements" class="form-label">Requirements</label>
+                        <textarea class="form-control" id="requirements" name="requirements" rows="5" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="salary" class="form-label">Salary</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" id="salary" name="salary" pattern="[0-9]*" inputmode="numeric" required>
+                        </div>
+                        <small class="text-muted">Please enter numbers only</small>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Post Job</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function validateSalary() {
+    const salaryInput = document.getElementById('salary');
+    const salaryValue = salaryInput.value;
+    
+    // Remove any non-numeric characters
+    const numericValue = salaryValue.replace(/[^0-9]/g, '');
+    
+    if (numericValue !== salaryValue) {
+        alert('Please enter numbers only for the salary');
+        salaryInput.value = numericValue;
+        return false;
+    }
+    
+    return true;
+}
+
+document.getElementById('salary').addEventListener('input', function(e) {
+    // Remove any non-numeric characters as they are typed
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
+</script>
+{% endblock %} 

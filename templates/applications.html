@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">All Applications</h2>
+    
+    {% if applications %}
+        <div class="row">
+            {% for application in applications %}
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ application.job.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ application.job.company.name }}</h6>
+                        <p class="card-text">
+                            <strong>Applicant:</strong> {{ application.applicant.name }}<br>
+                            <strong>Status:</strong> 
+                            <span class="badge {% if application.status == 'applied' %}bg-primary
+                                            {% elif application.status == 'interviewing' %}bg-warning
+                                            {% else %}bg-success{% endif %}">
+                                {{ application.status }}
+                            </span>
+                        </p>
+                        {% if application.message %}
+                        <p class="card-text">
+                            <strong>Message:</strong><br>
+                            {{ application.message }}
+                        </p>
+                        {% endif %}
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ url_for('job_applications', job_id=application.job.id) }}" class="btn btn-outline-primary btn-sm">View Job Applications</a>
+                            <small class="text-muted">Applied on {{ application.id }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            No applications have been submitted to your jobs yet.
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

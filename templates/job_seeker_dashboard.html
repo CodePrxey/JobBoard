@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Job Seeker Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Job Seeker Dashboard</h2>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{{ url_for('find_jobs') }}" class="btn btn-primary mb-2">Find Jobs</a>
+                    <a href="{{ url_for('my_applications') }}" class="btn btn-outline-primary mb-2">View All Applications</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Your Profile</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> {{ current_user.name }}</p>
+                    <p><strong>Email:</strong> {{ current_user.email }}</p>
+                    <a href="{{ url_for('profile') }}" class="btn btn-outline-primary">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Recent Job Listings</h5>
+                </div>
+                <div class="card-body">
+                    {% if jobs %}
+                    <div class="list-group">
+                        {% for job in jobs %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ job['title'] }}</h6>
+                                <small>${{ job['salary'] }}</small>
+                            </div>
+                            <p class="mb-1">{{ job['company_name'] }} - {{ job['company_location'] }}</p>
+                            <div class="btn-group mt-2">
+                                <a href="{{ url_for('job_details', job_id=job['id']) }}" class="btn btn-sm btn-outline-primary">View Details</a>
+                                {% if not job['has_applied'] %}
+                                    <a href="{{ url_for('apply_job', job_id=job['id']) }}" class="btn btn-sm btn-outline-success">Apply Now</a>
+                                {% else %}
+                                    <button class="btn btn-sm btn-outline-secondary" disabled>Already Applied</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p>No jobs available at the moment.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Recent Applications</h5>
+                </div>
+                <div class="card-body">
+                    {% if applications %}
+                    <div class="list-group">
+                        {% for application in applications %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ application['job_title'] }}</h6>
+                                <span class="badge bg-{{ 'success' if application['status'] == 'hired' else 'warning' if application['status'] == 'interviewing' else 'info' }}">
+                                    {{ application['status'] }}
+                                </span>
+                            </div>
+                            <p class="mb-1">{{ application['company_name'] }}</p>
+                            <a href="{{ url_for('job_details', job_id=application['job_id']) }}" class="btn btn-sm btn-outline-primary mt-2">View Job</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p>No applications submitted yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

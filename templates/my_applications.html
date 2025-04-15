@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}My Applications{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">My Applications</h2>
+    
+    {% if applications %}
+        <div class="row">
+            {% for application in applications %}
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ application['job_title'] }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ application['company_name'] }}</h6>
+                        <p class="card-text">{{ application['job_description'][:200] }}...</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge bg-primary me-2">${{ application['salary'] }}</span>
+                                <span class="badge {% if application['status'] == 'applied' %}bg-primary
+                                                {% elif application['status'] == 'interviewing' %}bg-warning
+                                                {% else %}bg-success{% endif %}">
+                                    {{ application['status'] }}
+                                </span>
+                            </div>
+                            <div>
+                                <a href="{{ url_for('job_details', job_id=application['job_id']) }}" class="btn btn-outline-primary btn-sm">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            You haven't applied to any jobs yet. <a href="{{ url_for('find_jobs') }}" class="alert-link">Find jobs</a> to apply.
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

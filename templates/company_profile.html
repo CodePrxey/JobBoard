@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Company Profile{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3>Company Profile</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Company Name</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ company.name if company else '' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="location" name="location" value="{{ company.location if company else '' }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="industry" class="form-label">Industry</label>
+                        <select class="form-select" id="industry" name="industry" required>
+                            <option value="">Select Industry</option>
+                            <option value="Technology" {% if company and company.industry == 'Technology' %}selected{% endif %}>Technology</option>
+                            <option value="Finance" {% if company and company.industry == 'Finance' %}selected{% endif %}>Finance</option>
+                            <option value="Healthcare" {% if company and company.industry == 'Healthcare' %}selected{% endif %}>Healthcare</option>
+                            <option value="Education" {% if company and company.industry == 'Education' %}selected{% endif %}>Education</option>
+                            <option value="Retail" {% if company and company.industry == 'Retail' %}selected{% endif %}>Retail</option>
+                            <option value="Manufacturing" {% if company and company.industry == 'Manufacturing' %}selected{% endif %}>Manufacturing</option>
+                            <option value="Other" {% if company and company.industry == 'Other' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Save Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Edit Job</h2>
+    
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" onsubmit="return validateSalary()">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Job Title</label>
+                    <input type="text" class="form-control" id="title" name="title" value="{{ job.title }}" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="description" class="form-label">Job Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="5" required>{{ job.description }}</textarea>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="requirements" class="form-label">Requirements</label>
+                    <textarea class="form-control" id="requirements" name="requirements" rows="5" required>{{ job.requirements }}</textarea>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="salary" class="form-label">Salary</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="text" class="form-control" id="salary" name="salary" value="{{ job.salary }}" pattern="[0-9]*" inputmode="numeric" required>
+                    </div>
+                    <small class="text-muted">Please enter numbers only</small>
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <a href="{{ url_for('my_listings') }}" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Update Job</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function validateSalary() {
+    const salaryInput = document.getElementById('salary');
+    const salaryValue = salaryInput.value;
+    
+    // Remove any non-numeric characters
+    const numericValue = salaryValue.replace(/[^0-9]/g, '');
+    
+    if (numericValue !== salaryValue) {
+        alert('Please enter numbers only for the salary');
+        salaryInput.value = numericValue;
+        return false;
+    }
+    
+    return true;
+}
+
+document.getElementById('salary').addEventListener('input', function(e) {
+    // Remove any non-numeric characters as they are typed
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
+</script>
+{% endblock %} 

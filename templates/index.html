@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to Job Board{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4 mb-4">Welcome to Job Board</h1>
+            <p class="lead mb-4">Find your dream job or the perfect candidate for your company.</p>
+            
+            {% if current_user.is_authenticated %}
+                {% if current_user.role == 'job_seeker' %}
+                    <div class="d-grid gap-2 col-md-6 mx-auto">
+                        <a href="{{ url_for('find_jobs') }}" class="btn btn-primary btn-lg">Find Jobs</a>
+                        <a href="{{ url_for('my_applications') }}" class="btn btn-outline-primary btn-lg">My Applications</a>
+                    </div>
+                {% else %}
+                    <div class="d-grid gap-2 col-md-6 mx-auto">
+                        <a href="{{ url_for('post_job') }}" class="btn btn-primary btn-lg">Post a Job</a>
+                        <a href="{{ url_for('my_listings') }}" class="btn btn-outline-primary btn-lg">My Job Listings</a>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="d-grid gap-2 col-md-6 mx-auto">
+                    <a href="{{ url_for('signup') }}" class="btn btn-primary btn-lg">Sign Up</a>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">Login</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">For Job Seekers</h5>
+                <p class="card-text">Find your perfect job match with our advanced search features and personalized recommendations.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">For Employers</h5>
+                <p class="card-text">Post jobs and find qualified candidates quickly and efficiently.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Easy Application Process</h5>
+                <p class="card-text">Simple and straightforward application process for both job seekers and employers.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
