@@ -1,5 +1,9 @@
+# Websites HTML uses Bootstrap as it is easier to use than messing with css
+
 from flask import Flask, render_template, request, redirect, url_for, flash, session
+# Makes creating a login page simpler
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+# Allows for passwords to be stored as hashes
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 from pathlib import Path
@@ -7,14 +11,16 @@ from pathlib import Path
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'loti-slepena-atslega'
 
-# Database setup
+# Path to database
 DATABASE = Path(__file__).parent / 'jobboard.db'
 
+# Get database
 def get_db():
     db = sqlite3.connect(DATABASE)
     db.row_factory = sqlite3.Row
     return db
 
+# Create database (if doesnt exist)
 def init_db():
     with app.app_context():
         db = get_db()
@@ -71,9 +77,10 @@ def init_db():
         db.commit()
         db.close()
 
-# Initialize the database
+# Call creation of database
 init_db()
 
+# Set up login logic
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -86,6 +93,7 @@ class User(UserMixin):
         self.password = password
         self.role = role
 
+# User loading logic
 @login_manager.user_loader
 def load_user(user_id):
     db = get_db()
@@ -99,11 +107,14 @@ def load_user(user_id):
                    user_data['password'], user_data['role'])
     return None
 
-# Routes
+# Routes to all pages
+# / --------------- /
+# First page (the home page)
 @app.route('/')
 def index():
     return render_template('index.html')
 
+# Login page with functionality to check if inputed data in form is correct to login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -125,6 +136,7 @@ def login():
         flash('Invalid email or password')
     return render_template('login.html')
 
+# Sign up page with functionality to create a new user
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -155,6 +167,7 @@ def signup():
     
     return render_template('signup.html')
 
+# Dashboard for job seeker and employer
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -225,12 +238,14 @@ def dashboard():
         db.close()
         return render_template('employer_dashboard.html', company=company, jobs=jobs, applications=applications)
 
+# Logout
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))
 
+# Find job page functionality
 @app.route('/find_jobs')
 @login_required
 def find_jobs():
@@ -269,6 +284,7 @@ def find_jobs():
     db.close()
     return render_template('find_jobs.html', jobs=jobs)
 
+# Selection for each job
 @app.route('/job/<int:job_id>')
 @login_required
 def job_details(job_id):
@@ -293,6 +309,7 @@ def job_details(job_id):
     db.close()
     return render_template('job_details.html', job=job, has_applied=job['has_applied'])
 
+# Application for each job
 @app.route('/apply/<int:job_id>', methods=['GET', 'POST'])
 @login_required
 def apply_job(job_id):
@@ -326,6 +343,7 @@ def apply_job(job_id):
     db.close()
     return render_template('apply_job.html', job=job)
 
+# Applications of a job seeker
 @app.route('/my_applications')
 @login_required
 def my_applications():
@@ -348,6 +366,7 @@ def my_applications():
     db.close()
     return render_template('my_applications.html', applications=applications)
 
+# Functionality to post a job
 @app.route('/post_job', methods=['GET', 'POST'])
 @login_required
 def post_job():
@@ -397,6 +416,7 @@ def post_job():
     db.close()
     return render_template('post_job.html')
 
+# Company profile page
 @app.route('/company_profile', methods=['GET', 'POST'])
 @login_required
 def company_profile():
@@ -432,6 +452,7 @@ def company_profile():
     db.close()
     return render_template('company_profile.html', company=company)
 
+# Job applications for the employer
 @app.route('/job_applications/<int:job_id>')
 @login_required
 def job_applications(job_id):
@@ -467,6 +488,7 @@ def job_applications(job_id):
     db.close()
     return render_template('job_applications.html', job=job, applications=applications)
 
+# Update each application functionality
 @app.route('/update_application_status/<int:application_id>', methods=['POST'])
 @login_required
 def update_application_status(application_id):
@@ -505,6 +527,7 @@ def update_application_status(application_id):
     db.close()
     return redirect(url_for('job_applications', job_id=application['job_id']))
 
+# Job deletion functionality
 @app.route('/delete_job/<int:job_id>', methods=['POST'])
 @login_required
 def delete_job(job_id):
@@ -539,6 +562,7 @@ def delete_job(job_id):
     db.close()
     return redirect(url_for('my_listings'))
 
+# Listing page for employer
 @app.route('/my_listings')
 @login_required
 def my_listings():
@@ -568,6 +592,7 @@ def my_listings():
     db.close()
     return render_template('my_listings.html', jobs=jobs)
 
+# Job editing functionality for the employer
 @app.route('/edit_job/<int:job_id>', methods=['GET', 'POST'])
 @login_required
 def edit_job(job_id):
@@ -604,6 +629,7 @@ def edit_job(job_id):
     db.close()
     return render_template('edit_job.html', job=job)
 
+# Profile of employer or job seeker
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
