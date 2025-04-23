@@ -1,4 +1,4 @@
-# Websites HTML uses Bootstrap as it is easier to use than messing with css
+# Websites HTML uses Bootstrap as it is easier to use than fighting with css all the time (i dont like css)
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 # Makes creating a login page simpler
