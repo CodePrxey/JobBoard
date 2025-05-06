@@ -10,6 +10,7 @@
     --danger-color: #e74c3c;
 }
 
+/* Had to make some css adjustments (I dont like css) */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
